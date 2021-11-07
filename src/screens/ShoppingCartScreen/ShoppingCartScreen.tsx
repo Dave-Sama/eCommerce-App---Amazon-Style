@@ -3,12 +3,18 @@ import {View, StyleSheet, FlatList, Text, ScrollView} from 'react-native';
 import Button from '../../components/Button/Button';
 import CartProductItem from '../../components/CartProductItem/CartProductItem';
 import cartProducts from '../../data/cart';
+import {useNavigation} from '@react-navigation/native';
 const ShoppingCartScreen = () => {
+  const navigation = useNavigation();
   const totalPrice = cartProducts.reduce(
     (summedPrice, product) =>
       summedPrice + product.item.price * product.quantity,
     0,
   );
+
+  const onCheckout = () => {
+    navigation.navigate('Address');
+  };
   return (
     <View style={styles.page}>
       {/* Render Product Component */}
@@ -25,7 +31,7 @@ const ShoppingCartScreen = () => {
             </Text>
             <Button
               text="Procced To Checkout"
-              onPress={() => {}}
+              onPress={onCheckout}
               containerStyles={{
                 backgroundColor: '#f7e300',
                 borderColor: '#c7b702',
