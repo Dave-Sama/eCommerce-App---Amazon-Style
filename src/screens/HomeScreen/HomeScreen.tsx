@@ -2,8 +2,9 @@ import React from 'react';
 import {View, StyleSheet, FlatList} from 'react-native';
 import ProductItem from '../../components/ProductItem/ProductItem';
 import products from '../../data/products';
-import QuantitySelector from '../../components/QuantitySelector/QuantitySelector';
-const HomeScreen = () => {
+
+const HomeScreen = ({searchValue}: {searchValue: string}) => {
+  console.log(searchValue);
   return (
     <View style={styles.page}>
       {/* Render Product Component */}

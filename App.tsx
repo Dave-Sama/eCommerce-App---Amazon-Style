@@ -12,11 +12,6 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import {SafeAreaView, StatusBar, useColorScheme} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import HomeScreen from './src/screens/HomeScreen/HomeScreen';
-import ProductScreen from './src/screens/ProductScreen/ProductScreen';
-import ShoppingCartScreen from './src/screens/ShoppingCartScreen/ShoppingCartScreen';
-import AddressScreen from './src/screens/AddressScreen/AddressScreen';
 import Router from './src/Router/Router';
 const App = () => {
   const isDarkMode = useColorScheme() === 'dark';

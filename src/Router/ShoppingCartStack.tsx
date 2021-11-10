@@ -7,12 +7,8 @@ const Stack = createStackNavigator();
 
 const HomeStack = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        component={ShoppingCartScreen}
-        name="cart"
-        // options={{title: 'Shopping Cart'}}
-      />
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Screen component={ShoppingCartScreen} name="cart" />
       <Stack.Screen
         component={AddressScreen}
         name="Address"
