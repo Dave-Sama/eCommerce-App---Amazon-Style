@@ -45,8 +45,6 @@ const AddressScreen = () => {
     }
   };
 
-  
-
   const onCheckout = () => {
     if (addressError) {
       Alert.alert('Fix all fields error before submiting.');
@@ -90,7 +88,10 @@ const AddressScreen = () => {
     <KeyboardAvoidingView>
       <ScrollView style={styles.root}>
         <View style={styles.row}>
-          <Picker selectedValue={country} onValueChange={setCountry}>
+          <Picker
+            accessibilityLabel={'gender'}
+            selectedValue={country}
+            onValueChange={setCountry}>
             {countries.map(country => (
               <Picker.Item
                 value={country.code}

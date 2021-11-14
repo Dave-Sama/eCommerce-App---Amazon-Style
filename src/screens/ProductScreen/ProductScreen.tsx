@@ -1,20 +1,57 @@
-import React, {useState} from 'react';
-import {Text, ScrollView} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {Text, ScrollView, ActivityIndicator} from 'react-native';
 import styles from './stylesProductScreen';
-import product from '../../data/product';
 import {useRoute} from '@react-navigation/native';
 import {Picker} from '@react-native-picker/picker';
 import QuantitySelector from '../../components/QuantitySelector/QuantitySelector';
 import Button from '../../components/Button/Button';
 import ImageCarousel from '../../components/ImageCarousel/ImageCarousel';
+import {DataStore, Auth} from 'aws-amplify';
+import {Product, CartProduct} from '../../models';
 
 const ProductScreen = () => {
-  const route = useRoute();
-  
-  const [selectedOption, setSelectedOption] = useState(
-    product.options ? product.options[0] : null,
+  const [selectedOption, setSelectedOption] = useState<string | undefined>(
+    undefined,
   );
   const [quantity, setQuantity] = useState(1);
+  const [product, setProduct] = useState<Product | undefined>(undefined);
+  const route = useRoute();
+
+  useEffect(() => {
+    if (!route.params?.id) {
+      return;
+    }
+    DataStore.query(Product, route.params.id)
+      .then(setProduct)
+      .catch(err => console.log(err));
+  }, [route.params?.id]);
+
+  useEffect(() => {
+    if (product?.options) {
+      setSelectedOption(product.options[0]);
+    }
+  }, [product]);
+
+  if (!product) {
+    return <ActivityIndicator />;
+  }
+
+  const onAddToCart = async () => {
+    const userData = await Auth.currentAuthenticatedUser();
+    if (!product || !userData) {
+      return;
+    }
+
+    const newCartProduct = new CartProduct({
+      userSub: userData.attributes.sub,
+      quantity,
+      option: selectedOption,
+      productID: product.id,
+    });
+
+    DataStore.save(newCartProduct);
+  };
+
   return (
     <ScrollView style={styles.root}>
       <Text style={styles.title}>{product.title}</Text>
@@ -24,6 +61,7 @@ const ProductScreen = () => {
 
       {/* Option selector */}
       <Picker
+        accessibilityLabel={'gender'}
         selectedValue={selectedOption}
         onValueChange={itemValue => setSelectedOption(itemValue)}>
         {product.options.map(option => (
@@ -33,9 +71,9 @@ const ProductScreen = () => {
 
       {/* Price */}
       <Text style={styles.price}>
-        From ${product.price}{' '}
+        From ${product.price.toFixed(2)}{' '}
         {product.oldPrice && (
-          <Text style={styles.oldPrice}>{product.oldPrice}$ </Text>
+          <Text style={styles.oldPrice}>{product.oldPrice.toFixed(2)}$ </Text>
         )}
       </Text>
       {/* Description */}
@@ -45,7 +83,7 @@ const ProductScreen = () => {
       <QuantitySelector quantity={quantity} setQuantity={setQuantity} />
 
       {/* Button */}
-      <Button text={'Add To Cart'} onPress={() => {}} />
+      <Button text={'Add To Cart'} onPress={onAddToCart} />
       <Button text={'Buy Now'} onPress={() => {}} />
     </ScrollView>
   );
