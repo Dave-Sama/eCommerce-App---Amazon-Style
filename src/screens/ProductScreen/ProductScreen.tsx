@@ -41,7 +41,6 @@ const ProductScreen = () => {
     if (!product || !userData) {
       return;
     }
-
     const newCartProduct = new CartProduct({
       userSub: userData.attributes.sub,
       quantity,
